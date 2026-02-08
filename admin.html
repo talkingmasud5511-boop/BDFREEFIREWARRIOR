@@ -1,44 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>TNM ADMIN PANEL</title>
+    <title>TNM ADMIN PANEL - MASTER</title>
     <style>
         body { background: #1a1a1a; color: white; font-family: sans-serif; padding: 20px; }
-        .card { background: #333; padding: 15px; margin-bottom: 10px; border-radius: 10px; border-left: 5px solid #ff4b2b; }
-        h2 { color: #ff4b2b; border-bottom: 1px solid #444; padding-bottom: 10px; }
-        .btn-done { background: #38ef7d; color: black; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .card { background: #333; padding: 15px; margin-bottom: 15px; border-radius: 10px; border-left: 5px solid #ff4b2b; }
+        h2 { color: #ff4b2b; border-bottom: 1px solid #444; padding-bottom: 10px; margin-top: 0; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 5px; border: none; box-sizing: border-box; }
+        .btn-done { background: #38ef7d; color: black; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 5px; }
         #login-lock { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #111; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
-        input#admin-pass { padding: 12px; border-radius: 5px; border: none; width: 250px; margin-bottom: 10px; text-align: center; font-size: 18px; }
     </style>
 </head>
 <body>
+
     <div id="login-lock">
-        <h2 style="color: white;">🔒 Admin Access</h2>
-        <input type="password" id="admin-pass" placeholder="Enter Password">
-        <button class="btn-done" style="width: 250px; height: 45px;" onclick="checkPassword()">UNLOCK</button>
+        <h2 style="color: white;">🔒 Admin Access Only</h2>
+        <input type="password" id="admin-pass" placeholder="Enter Password" style="width: 250px;">
+        <button class="btn-done" style="width: 250px; height: 45px;" onclick="checkPassword()">UNLOCK PANEL</button>
         <p id="error" style="color: red; display: none; margin-top: 10px;">Wrong Password!</p>
     </div>
 
     <div id="admin-content" style="display: none;">
-        <h1>🎮 TNM RIYAD - ADMIN PANEL</h1>
-        <button class="btn-done" style="background: red; color: white; margin-bottom: 20px;" onclick="location.reload()">LOGOUT</button>
-        <h2>💰 User Deposits</h2>
-        <div id="deposit-list">Loading Deposits...</div>
-        <h2>🛡️ Match Registrations</h2>
-        <div id="reg-list">Loading Registrations...</div>
+        <h1 style="text-align: center;">🎮 TNM RIYAD ADMIN</h1>
+
+        <div class="card" style="border-left-color: #00d2ff;">
+            <h2>💰 Edit User Balance</h2>
+            <input type="email" id="target-email" placeholder="User Email Address">
+            <input type="number" id="balance-amount" placeholder="Amount (e.g. 100 to add, -50 to cut)">
+            <button class="btn-done" style="background: #00d2ff;" onclick="updateBalance()">Update Balance</button>
+        </div>
+
+        <div class="card" style="border-left-color: #ffda44;">
+            <h2>📢 Send Room ID & Pass</h2>
+            <select id="match-name">
+                <option value="Solo Bermuda">Solo Bermuda</option>
+                <option value="Duo Match 1">Duo Match 1</option>
+                <option value="Duo Match 2">Duo Match 2</option>
+                <option value="CS 4vs4">CS 4vs4</option>
+                <option value="CS 2vs2">CS 2vs2</option>
+                <option value="CS 1vs1">CS 1vs1</option>
+            </select>
+            <input type="text" id="room-details" placeholder="Room ID: 123, Pass: 456">
+            <button class="btn-done" style="background: #ffda44;" onclick="sendRoomID()">Send to Users</button>
+        </div>
+
+        <hr>
+
+        <h2>💰 Deposits</h2>
+        <div id="deposit-list">Loading...</div>
+
+        <h2>🛡️ Registrations</h2>
+        <div id="reg-list">Loading...</div>
+
+        <h2>💸 Withdraws</h2>
+        <div id="withdraw-list">Loading...</div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
     <script>
-        const SECRET_PASSWORD = "riyad123"; // এখানে আপনার পাসওয়ার্ড সেট করুন
+        const SECRET_PASSWORD = "riyad123"; // আপনার পাসওয়ার্ড
 
         function checkPassword() {
             if(document.getElementById('admin-pass').value === SECRET_PASSWORD) {
                 document.getElementById('login-lock').style.display = 'none';
                 document.getElementById('admin-content').style.display = 'block';
-                loadAdminData();
+                loadData();
             } else { document.getElementById('error').style.display = 'block'; }
         }
 
@@ -49,18 +77,40 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        function loadAdminData() {
+        // --- BALANCE UPDATE FUNCTION ---
+        function updateBalance() {
+            const email = document.getElementById('target-email').value.replace(/\./g, ',');
+            const amount = parseInt(document.getElementById('balance-amount').value);
+            if(email && amount) {
+                db.ref('wallets/' + email + '/balance').transaction(curr => (curr || 0) + amount)
+                .then(() => { alert('Success!'); document.getElementById('balance-amount').value=''; });
+            }
+        }
+
+        // --- ROOM ID SEND FUNCTION ---
+        function sendRoomID() {
+            const match = document.getElementById('match-name').value;
+            const details = document.getElementById('room-details').value;
+            if(details) {
+                db.ref('room_details/' + match).set({ msg: details, time: new Date().toLocaleString() })
+                .then(() => alert('Room ID Sent for ' + match));
+            }
+        }
+
+        function loadData() {
+            // Deposits
             db.ref('deposits').on('value', snap => {
                 let h = ''; snap.forEach(c => { const d = c.val();
-                    h += `<div class="card"><p>📧 ${d.user}</p><p>💵 ${d.amount} TK</p><p>🆔 ${d.trxID}</p>
-                    <button class="btn-done" onclick="if(confirm('Delete?')) db.ref('deposits/${c.key}').remove()">Mark Done</button></div>`;
+                    h += `<div class="card"><p>📧 ${d.user}</p><p>💵 ${d.amount} TK (Trx: ${d.trxID})</p>
+                    <button class="btn-done" onclick="db.ref('deposits/${c.key}').remove()">Done/Delete</button></div>`;
                 });
                 document.getElementById('deposit-list').innerHTML = h || 'No Deposits';
             });
+            // Registrations
             db.ref('registrations').on('value', snap => {
                 let h = ''; snap.forEach(c => { const d = c.val();
-                    h += `<div class="card" style="border-left-color:#38ef7d"><p>🏆 Match: ${d.match}</p><p>👤 Player: ${d.playerName} (${d.gameUID})</p>
-                    <button class="btn-done" style="background:orange" onclick="if(confirm('Delete?')) db.ref('registrations/${c.key}').remove()">Remove</button></div>`;
+                    h += `<div class="card"><p>🏆 ${d.match}</p><p>👤 ${d.playerName} (${d.gameUID})</p>
+                    <button class="btn-done" onclick="db.ref('registrations/${c.key}').remove()">Delete</button></div>`;
                 });
                 document.getElementById('reg-list').innerHTML = h || 'No Registrations';
             });
