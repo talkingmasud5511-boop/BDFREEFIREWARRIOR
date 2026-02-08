@@ -3,230 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TNM RIYAD TOURNAMENT</title>
+    <title>FF WARRIOR BD - FINAL VERSION</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #ff4b2b; --secondary: #ff416c; --dark: #1a1a1a; --card-bg: #2d2d2d; --text: #ffffff; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--dark); color: var(--text); margin: 0; padding-bottom: 80px; }
-        
-        /* Auth Screens */
-        .auth-screen { padding: 40px 20px; text-align: center; display: none; height: 100vh; }
-        .auth-screen.active { display: flex; flex-direction: column; justify-content: center; }
-        .auth-card { background: var(--card-bg); padding: 30px 20px; border-radius: 15px; border: 1px solid #444; }
+        :root { --primary: #ff0040; --accent: #00f2ff; --bg: #050507; --card: #121217; --yellow: #ffd700; --green: #25D366; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: #fff; padding-bottom: 90px; }
+        .gaming-font { font-family: 'Rajdhani', sans-serif; text-transform: uppercase; }
 
-        .header { background: linear-gradient(to right, var(--primary), var(--secondary)); padding: 20px; text-align: center; font-size: 22px; font-weight: bold; position: sticky; top: 0; z-index: 100; }
-        
-        .section { display: none; padding: 15px; animation: fadeIn 0.4s; }
-        .section.active { display: block; }
+        /* Auth Screen */
+        .auth-screen { height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://wallpaperaccess.com/full/1155015.jpg') center/cover; }
+        .auth-box { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid var(--primary); width: 100%; max-width: 400px; text-align: center; }
+
+        .screen { display: none; padding: 15px; animation: fadeIn 0.3s ease; }
+        .active-screen { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Match Cards */
-        .match-card { background: var(--card-bg); border-radius: 15px; padding: 18px; margin-bottom: 20px; border-left: 5px solid var(--primary); }
-        .match-title { font-size: 19px; color: #ffda44; margin-bottom: 8px; font-weight: bold; }
-        .prize-row { display: flex; justify-content: space-between; font-size: 13px; margin: 10px 0; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 5px; }
+        /* Match Card */
+        .match-card { background: var(--card); border-radius: 20px; margin-bottom: 25px; border: 1px solid #222; overflow: hidden; position: relative; }
+        .match-header { height: 125px; background: url('https://img.redbull.com/images/c_limit,w_1500,h_1000,f_auto,q_auto/redbullcom/2020/4/17/ixtqnt6t9h7m9w0m4o2v/free-fire') center/cover; }
+        .match-tag { position: absolute; top: 10px; left: 10px; background: var(--primary); padding: 4px 12px; border-radius: 6px; font-weight: bold; font-size: 11px; }
         
-        .btn { background: linear-gradient(to right, #11998e, #38ef7d); border: none; color: white; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
-        .details-btn { background: #444; margin-bottom: 5px; font-size: 14px; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; }
-        
-        input, select { width: 100%; padding: 14px; margin: 10px 0; border-radius: 8px; border: 1px solid #444; background: #333; color: white; box-sizing: border-box; }
+        .prize-list { background: #08080a; padding: 10px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #1a1a1a; }
+        .prize-item { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px; }
+        .reg-tabs { display: flex; gap: 5px; margin-bottom: 15px; background: #000; padding: 5px; border-radius: 10px; }
+        .reg-tab { flex: 1; padding: 8px; text-align: center; font-size: 11px; font-weight: bold; cursor: pointer; border-radius: 8px; color: #888; }
+        .reg-tab.active { background: var(--primary); color: white; }
 
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; z-index: 1000; }
-        .nav-item { color: #888; text-decoration: none; font-size: 10px; text-align: center; cursor: pointer; flex: 1; }
-        .nav-item.active { color: var(--primary); font-weight: bold; }
-        .per-kill { color: #00ff88; font-size: 13px; font-weight: bold; }
+        .input-box { background: #000; border: 1px solid #333; padding: 12px; width: 100%; border-radius: 10px; color: white; margin-bottom: 10px; outline: none; font-size: 13px; display: none; }
+        .show-input { display: block; }
+        .btn-main { width: 100%; padding: 14px; background: var(--primary); border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+
+        /* Navigation */
+        nav { position: fixed; bottom: 0; width: 100%; background: #0a0a0d; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #222; z-index: 1000; }
+        .nav-item { text-align: center; color: #555; font-size: 9px; cursor: pointer; flex:1; }
+        .nav-item i { font-size: 18px; display: block; margin-bottom: 4px; }
+        .nav-item.active { color: var(--primary); }
+
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .stat-box { background: var(--card); padding: 15px; border-radius: 15px; border: 1px solid #222; text-align: center; }
+        .support-card { background: #1a1a20; padding: 15px; border-radius: 15px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; border-left: 5px solid var(--accent); }
     </style>
 </head>
 <body>
 
-<div id="signin-screen" class="auth-screen active">
-    <div class="auth-card">
-        <h2 style="color: var(--primary);">WELCOME</h2>
-        <input type="email" id="login-email" placeholder="Email Address">
-        <input type="password" id="login-pass" placeholder="Password">
-        <button class="btn" onclick="login()">SIGN IN</button>
-        <p onclick="toggleAuth('signup-screen')" style="margin-top:20px; color:#aaa; cursor:pointer;">New? <span style="color:var(--primary)">Register</span></p>
-    </div>
-</div>
-
-<div id="signup-screen" class="auth-screen">
-    <div class="auth-card">
-        <h2 style="color: var(--primary);">CREATE ACCOUNT</h2>
-        <input type="email" id="up-email" placeholder="Email Address">
-        <input type="password" id="up-pass" placeholder="Password">
-        <button class="btn" onclick="register()">SIGN UP</button>
-        <p onclick="toggleAuth('signin-screen')" style="margin-top:20px; color:#aaa; cursor:pointer;">Login Here</p>
-    </div>
-</div>
-
-<div id="main-app" style="display: none;">
-    <div class="header">🎮 TNM RIYAD TOURNAMENT</div>
-
-    <div id="home" class="section active">
-        
-        <div class="match-card">
-            <div class="match-title">🔥 Solo Bermuda Match 🏆</div>
-            <p>Entry Fee: 10 Taka | <span class="per-kill">Per Kill: 5 Taka</span></p>
-            <button class="details-btn" onclick="alert('Room ID: 12345\nPass: 999')">Match Details</button>
-            <div class="prize-row"><span>1st: 50tk</span><span>2nd: 40tk</span><span>3rd: 30tk</span></div>
-            <button class="btn" onclick="openRegister('Solo Bermuda', 10, 'solo')">Register Now</button>
-        </div>
-
-        <div class="match-card">
-            <div class="match-title">⚔️ Duo Match (1) 🥇</div>
-            <p>Entry Fee: 20 Taka | <span class="per-kill">Per Kill: 10 Taka</span></p>
-            <div class="prize-row"><span>1st: 100tk (50/50 Separated)</span><span>2nd: 80tk</span></div>
-            <button class="btn" onclick="openRegister('Duo Match 1', 20, 'duo')">Register Now</button>
-        </div>
-
-        <div class="match-card">
-            <div class="match-title">⚔️ Duo Match (2) 🥈</div>
-            <p>Entry Fee: 40 Taka | <span class="per-kill">Per Kill: 20 Taka</span></p>
-            <div class="prize-row"><span>1st: 200tk (100/100 Separated)</span><span>2nd: 160tk</span></div>
-            <button class="btn" onclick="openRegister('Duo Match 2', 40, 'duo')">Register Now</button>
-        </div>
-
-        <div class="match-card">
-            <div class="match-title">🛡️ Clash Squad 4vs4 🔫</div>
-            <p>Entry Fee: 50tk/Person | Win Prize: 340tk</p>
-            <p>Winner: 85 Taka Each</p>
-            <button class="btn" onclick="openRegister('CS 4vs4', 50, 'squad')">Register Now</button>
-        </div>
-
-        <div class="match-card">
-            <div class="match-title">🛡️ Clash Squad 2vs2 🔫</div>
-            <p>Entry Fee: 100tk/Person | Win Prize: 350tk</p>
-            <p>Winner: 175 Taka Each</p>
-            <button class="btn" onclick="openRegister('CS 2vs2', 100, 'duo')">Register Now</button>
-        </div>
-
-        <div class="match-card">
-            <div class="match-title">🛡️ Clash Squad 1vs1 🔫</div>
-            <p>Entry Fee: 200tk | Win Prize: 360tk</p>
-            <button class="btn" onclick="openRegister('CS 1vs1', 200, 'solo')">Register Now</button>
-        </div>
-
-    </div>
-
-    <div id="rank" class="section">
-        <h2 style="text-align: center; color: #ffda44;">🏆 Top Players</h2>
-        <div style="background: #333; padding: 15px; border-radius: 10px;">
-            <p>1. Talking Masud - 1500tk</p>
-            <p>2. Riyad - 1200tk</p>
+    <div id="scr-signin" class="auth-screen active-screen">
+        <div class="auth-box">
+            <h2 class="gaming-font" style="color:var(--primary); margin-bottom:20px;">Welcome Back 🔑</h2>
+            <input type="email" class="input-box show-input" placeholder="Email">
+            <input type="password" class="input-box show-input" placeholder="Password">
+            <button class="btn-main" onclick="enterApp()">Login 🔓</button>
+            <p style="margin-top:15px; font-size:12px; color:#888;">New player? <span style="color:var(--primary)" onclick="toggleAuth('signup')">Sign Up</span></p>
         </div>
     </div>
 
-    <div id="deposit" class="section">
-        <h2>💰 Deposit Money</h2>
-        <p>Personal Bkash/Nagad: <b>01910658737</b></p>
-        <input type="number" placeholder="Amount (50-3000)">
-        <input type="text" placeholder="Transaction ID">
-        <button class="btn" onclick="alert('Submission Done!')">Submit Deposit</button>
+    <div id="scr-signup" class="auth-screen" style="display:none;">
+        <div class="auth-box">
+            <h2 class="gaming-font" style="color:var(--primary); margin-bottom:20px;">Create Account 📝</h2>
+            <input type="text" class="input-box show-input" placeholder="Full Name">
+            <input type="email" class="input-box show-input" placeholder="Email">
+            <input type="password" class="input-box show-input" placeholder="Password">
+            <button class="btn-main" onclick="enterApp()">Register ✅</button>
+            <p style="margin-top:15px; font-size:12px; color:#888;">Have account? <span style="color:var(--primary)" onclick="toggleAuth('signin')">Sign In</span></p>
+        </div>
     </div>
 
-    <div id="withdraw" class="section">
-        <h2>💸 Withdraw Money</h2>
-        <p>Limit: 50 - 2000 Taka</p>
-        <input type="text" placeholder="Receiver Number">
-        <input type="number" placeholder="Amount">
-        <button class="btn" onclick="alert('Withdraw Request Sent!')">Confirm Withdraw</button>
+    <div id="main-app" style="display:none;">
+        <div style="padding:15px; display:flex; justify-content:space-between; align-items:center; background:var(--card); border-bottom:1px solid #222;">
+            <h2 class="gaming-font" style="color:var(--primary);">⚔️ WARRIOR BD</h2>
+            <div style="background:#000; padding:6px 12px; border-radius:20px; color:var(--accent); font-weight:bold; border:1px solid var(--accent);">৳ 0.00 💎</div>
+        </div>
+
+        <div id="scr-home" class="screen active-screen">
+            <div class="match-card">
+                <div class="match-tag">SOLO • BERMUDA</div>
+                <div class="match-header"></div>
+                <div class="match-body" style="padding:15px;">
+                    <h3 class="gaming-font">Solo Match #01 🏆</h3>
+                    <div class="prize-list"><div class="prize-item"><span>1st: ৳ 50 | 2nd: ৳ 40 | 3rd: ৳ 30</span></div></div>
+                    <p style="color:var(--accent); font-weight:bold; margin-bottom:8px;">Entry: ৳ 10</p>
+                    <input type="text" class="input-box show-input" placeholder="Your UID 👤">
+                    <button class="btn-main">Join Now</button>
+                </div>
+            </div>
+
+            <div class="match-card" id="m-duo1">
+                <div class="match-tag">DUO • BERMUDA #01</div>
+                <div class="match-header" style="filter:hue-rotate(50deg)"></div>
+                <div class="match-body" style="padding:15px;">
+                    <h3 class="gaming-font">Duo Battle #D1 ⚔️</h3>
+                    <div class="reg-tabs">
+                        <div class="reg-tab active" onclick="setReg('m-duo1', 1, 20)">Solo</div>
+                        <div class="reg-tab" onclick="setReg('m-duo1', 2, 40)">Duo</div>
+                    </div>
+                    <p class="fee-text" style="color:var(--accent); font-weight:bold; margin-bottom:10px;">Entry: ৳ 20</p>
+                    <input type="text" class="input-box show-input p1" placeholder="P1 UID">
+                    <input type="text" class="input-box p2" placeholder="P2 UID">
+                    <button class="btn-main">Register</button>
+                </div>
+            </div>
+
+            <div class="match-card" id="m-duo2">
+                <div class="match-tag">DUO • BERMUDA #02</div>
+                <div class="match-header" style="filter:hue-rotate(100deg)"></div>
+                <div class="match-body" style="padding:15px;">
+                    <h3 class="gaming-font">Duo Elite #D2 💎</h3>
+                    <div class="reg-tabs">
+                        <div class="reg-tab active" onclick="setReg('m-duo2', 1, 40)">Solo</div>
+                        <div class="reg-tab" onclick="setReg('m-duo2', 2, 80)">Duo</div>
+                    </div>
+                    <p class="fee-text" style="color:var(--accent); font-weight:bold; margin-bottom:10px;">Entry: ৳ 40</p>
+                    <input type="text" class="input-box show-input p1" placeholder="P1 UID">
+                    <input type="text" class="input-box p2" placeholder="P2 UID">
+                    <button class="btn-main">Register</button>
+                </div>
+            </div>
+
+            <div class="match-card" id="m-4v4">
+                <div class="match-tag">SQUAD • 4vs4</div>
+                <div class="match-header" style="filter:hue-rotate(150deg)"></div>
+                <div class="match-body" style="padding:15px;">
+                    <h3 class="gaming-font">Squad vs Squad #CS ⚡</h3>
+                    <div class="reg-tabs">
+                        <div class="reg-tab active" onclick="setReg('m-4v4', 1, 50)">Solo</div>
+                        <div class="reg-tab" onclick="setReg('m-4v4', 2, 100)">Duo</div>
+                        <div class="reg-tab" onclick="setReg('m-4v4', 4, 200)">Squad</div>
+                    </div>
+                    <p class="fee-text" style="color:var(--accent); font-weight:bold; margin-bottom:10px;">Entry: ৳ 50</p>
+                    <input type="text" class="input-box show-input p1" placeholder="P1 UID">
+                    <input type="text" class="input-box p2" placeholder="P2 UID">
+                    <input type="text" class="input-box p3" placeholder="P3 UID">
+                    <input type="text" class="input-box p4" placeholder="P4 UID">
+                    <button class="btn-main">Join Team</button>
+                </div>
+            </div>
+
+            <div class="match-card" id="m-2v2">
+                <div class="match-tag">2vs2 • BATTLE</div>
+                <div class="match-header" style="filter:hue-rotate(280deg)"></div>
+                <div class="match-body" style="padding:15px;">
+                    <h3 class="gaming-font">2vs2 Battle #2V2 🤝</h3>
+                    <div class="reg-tabs">
+                        <div class="reg-tab active" onclick="setReg('m-2v2', 1, 100)">Solo</div>
+                        <div class="reg-tab" onclick="setReg('m-2v2', 2, 200)">Duo</div>
+                    </div>
+                    <p class="fee-text" style="color:var(--accent); font-weight:bold; margin-bottom:10px;">Entry: ৳ 100</p>
+                    <input type="text" class="input-box show-input p1" placeholder="P1 UID">
+                    <input type="text" class="input-box p2" placeholder="P2 UID">
+                    <button class="btn-main">Join 2vs2</button>
+                </div>
+            </div>
+
+            <div class="match-card">
+                <div class="match-tag">1vs1 • LEGEND</div>
+                <div class="match-header" style="filter:grayscale(1)"></div>
+                <div class="match-body" style="padding:15px;">
+                    <h3 class="gaming-font">1vs1 Legend Match 👑</h3>
+                    <p style="color:var(--accent); font-weight:bold; margin-bottom:10px;">Entry: ৳ 200</p>
+                    <input type="text" class="input-box show-input" placeholder="Your UID 👤">
+                    <button class="btn-main">Join 1vs1</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="scr-rank" class="screen">
+            <h2 class="gaming-font">Warriors Rank 🏆</h2>
+            <div class="match-card" style="padding:15px;">
+                <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #222;">
+                    <span>1. Top_Warrior</span> <b style="color:var(--yellow);">2,450 TK Won</b>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #222;">
+                    <span>2. Sniper_King</span> <b style="color:#c0c0c0;">1,820 TK Won</b>
+                </div>
+            </div>
+        </div>
+
+        <div id="scr-status" class="screen">
+            <div style="background:var(--card); border-radius:20px; padding:25px; border:1px solid #333; text-align:center;">
+                <img src="https://cdn-icons-png.flaticon.com/512/8002/8002111.png" style="width:70px; margin-bottom:10px;">
+                <h2 class="gaming-font">Player Profile</h2>
+                <div class="stat-grid">
+                    <div class="stat-box"><h3>৳ 0.00</h3><p>Balance</p></div>
+                    <div class="stat-box"><h3>0</h3><p>Wins</p></div>
+                </div>
+                <button class="btn-main" style="margin-top:20px; background:#333;" onclick="location.reload()">Logout</button>
+            </div>
+        </div>
+
+        <div id="scr-deposit" class="screen">
+            <h2 class="gaming-font">Add Money 💰</h2>
+            <div class="match-card" style="padding:20px; border:1px dashed var(--green);">
+                <p style="font-size:12px;">Send Money (Personal):</p>
+                <h3 style="color:var(--accent); margin:10px 0;">01910658737</h3>
+                <select class="input-box show-input" style="display:block; background:#000; color:white;">
+                    <option>Bkash</option><option>Nagad</option>
+                </select>
+                <input type="number" class="input-box show-input" placeholder="Amount">
+                <input type="text" class="input-box show-input" placeholder="Your Number">
+                <input type="text" class="input-box show-input" placeholder="TrxID">
+                <button class="btn-main" style="background:var(--green)">Submit</button>
+            </div>
+        </div>
+
+        <div id="scr-withdraw" class="screen">
+            <h2 class="gaming-font">Withdraw Cash 💸</h2>
+            <div class="match-card" style="padding:20px;">
+                <label style="font-size:11px; color:#888;">Select Method:</label>
+                <select class="input-box show-input" style="display:block; background:#000; color:white; margin-top:5px;">
+                    <option>Bkash</option><option>Nagad</option><option>Rocket</option>
+                </select>
+                <input type="number" class="input-box show-input" placeholder="Amount (Min 50)">
+                <input type="text" class="input-box show-input" placeholder="Receiver Number">
+                <button class="btn-main" style="background:var(--accent); color:#000;">Request Withdraw</button>
+            </div>
+        </div>
+
+        <div id="scr-support" class="screen">
+            <h2 class="gaming-font">Support 🎧</h2>
+            <div class="support-card" onclick="window.location.href='https://wa.me/8801910658737'">
+                <i class="fab fa-whatsapp" style="color:var(--green); font-size:30px;"></i>
+                <div><h4>WhatsApp Support</h4><p style="font-size:11px;">Message us for help</p></div>
+            </div>
+        </div>
+
+        <nav>
+            <div class="nav-item active" onclick="showTab('home', this)"><i class="fas fa-gamepad"></i>Play</div>
+            <div class="nav-item" onclick="showTab('rank', this)"><i class="fas fa-trophy"></i>Rank</div>
+            <div class="nav-item" onclick="showTab('status', this)"><i class="fas fa-user-circle"></i>Profile</div>
+            <div class="nav-item" onclick="showTab('deposit', this)"><i class="fas fa-wallet"></i>Deposit</div>
+            <div class="nav-item" onclick="showTab('withdraw', this)"><i class="fas fa-money-bill"></i>Withdraw</div>
+            <div class="nav-item" onclick="showTab('support', this)"><i class="fas fa-headset"></i>Help</div>
+        </nav>
     </div>
 
-    <div id="support" class="section">
-        <h2>📞 Support & Contact</h2>
-        <p>📧 Email: <b>talkingmasud5511@gmail.com</b></p>
-        <p>💬 WhatsApp: 01910658737</p>
-        <p>📺 <a href="https://youtube.com/@tnmriyad" style="color:red; text-decoration:none;">YouTube Channel</a></p>
-        <p>✈️ <a href="https://t.me/+XF_oEofeAeEwMDI9" style="color:cyan; text-decoration:none;">Telegram Channel</a></p>
-    </div>
-
-    <div id="register-page" class="section">
-        <h2 id="reg-title">Register</h2>
-        <select id="reg-mode" onchange="updateRegFee()">
-            <option value="solo">Solo Join</option>
-            <option value="duo" id="opt-duo">Duo (Team)</option>
-            <option value="squad" id="opt-squad">Squad (4 Members)</option>
-        </select>
-        <p>Total Fee: <span id="fee-display">0</span> Taka</p>
-        <input type="text" placeholder="Game Name" id="reg-name">
-        <input type="text" placeholder="UID" id="reg-uid">
-        <button class="btn" onclick="alert('Successfully Registered!')">Confirm</button>
-        <button class="details-btn" style="margin-top:10px;" onclick="showSection('home')">Back</button>
-    </div>
-
-    <nav class="bottom-nav">
-        <div class="nav-item active" id="n-home" onclick="showSection('home')">🏠<br>Home</div>
-        <div class="nav-item" id="n-rank" onclick="showSection('rank')">🏆<br>Rank</div>
-        <div class="nav-item" id="n-deposit" onclick="showSection('deposit')">💰<br>Deposit</div>
-        <div class="nav-item" id="n-withdraw" onclick="showSection('withdraw')">💸<br>Withdraw</div>
-        <div class="nav-item" id="n-support" onclick="showSection('support')">📞<br>Support</div>
-    </nav>
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-
-<script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyB2WdXJJNYqmos9Sl_D2wCUyMzMFujE57c",
-        authDomain: "tnm-a2840.firebaseapp.com",
-        projectId: "tnm-a2840",
-        storageBucket: "tnm-a2840.firebasestorage.app",
-        messagingSenderId: "396157832456",
-        appId: "1:396157832456:web:1e127ace39524f4ca130bd",
-        measurementId: "G-96L750V79E"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-    function toggleAuth(id) {
-        document.querySelectorAll('.auth-screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-    }
-
-    function register() {
-        auth.createUserWithEmailAndPassword(document.getElementById('up-email').value, document.getElementById('up-pass').value)
-            .then(() => { alert("Created! Login now."); toggleAuth('signin-screen'); })
-            .catch(err => alert(err.message));
-    }
-
-    function login() {
-        auth.signInWithEmailAndPassword(document.getElementById('login-email').value, document.getElementById('login-pass').value)
-            .then(() => {
-                document.querySelectorAll('.auth-screen').forEach(s => s.style.display = 'none');
-                document.getElementById('main-app').style.display = 'block';
-            })
-            .catch(err => alert(err.message));
-    }
-
-    let baseFee = 0;
-    function showSection(id) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        
-        if(id === 'home') document.getElementById('n-home').classList.add('active');
-        if(id === 'rank') document.getElementById('n-rank').classList.add('active');
-        if(id === 'deposit') document.getElementById('n-deposit').classList.add('active');
-        if(id === 'withdraw') document.getElementById('n-withdraw').classList.add('active');
-        if(id === 'support') document.getElementById('n-support').classList.add('active');
-    }
-
-    function openRegister(title, fee, option) {
-        showSection('register-page');
-        document.getElementById('reg-title').innerText = "Register: " + title;
-        baseFee = fee;
-        document.getElementById('opt-duo').style.display = (option === 'solo') ? 'none' : 'block';
-        document.getElementById('opt-squad').style.display = (option === 'squad') ? 'block' : 'none';
-        updateRegFee();
-    }
-
-    function updateRegFee() {
-        const mode = document.getElementById('reg-mode').value;
-        let final = baseFee;
-        if(mode === 'duo') final = baseFee * 2;
-        if(mode === 'squad') final = baseFee * 4;
-        document.getElementById('fee-display').innerText = final;
-    }
-</script>
+    <script>
+        function toggleAuth(id) {
+            document.getElementById('scr-signin').style.display = 'none';
+            document.getElementById('scr-signup').style.display = 'none';
+            document.getElementById('scr-' + id).style.display = 'flex';
+        }
+        function enterApp() {
+            document.getElementById('scr-signin').style.display = 'none';
+            document.getElementById('scr-signup').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+        }
+        function showTab(id, el) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('scr-' + id).classList.add('active-screen');
+            el.classList.add('active');
+        }
+        function setReg(matchId, players, fee) {
+            const card = document.getElementById(matchId);
+            card.querySelectorAll('.reg-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            card.querySelector('.fee-text').innerText = "Entry: ৳ " + fee;
+            card.querySelectorAll('.input-box').forEach(i => i.classList.remove('show-input'));
+            if(players >= 1) card.querySelector('.p1').classList.add('show-input');
+            if(players >= 2) card.querySelector('.p2').classList.add('show-input');
+            if(players >= 3 && card.querySelector('.p3')) card.querySelector('.p3').classList.add('show-input');
+            if(players >= 4 && card.querySelector('.p4')) card.querySelector('.p4').classList.add('show-input');
+        }
+    </script>
 </body>
 </html>
