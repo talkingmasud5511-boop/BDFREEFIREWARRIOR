@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TNM RIYAD TOURNAMENT</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
     <style>
         :root {
             --primary: #ff4b2b;
@@ -269,7 +273,7 @@
             <input type="text" placeholder="In-Game UID" id="reg-uid">
         </div>
 
-        <button class="btn" onclick="alert('Registration Successful!')">Confirm Register</button>
+        <button class="btn" onclick="submitRegistration()">Confirm Register</button>
         
         <div id="status-box" style="margin-top:20px; border:1px dashed #777; padding:10px;">
             <p>Status: <span id="reg-status">Waiting for data...</span></p>
@@ -322,6 +326,17 @@
 </div>
 
 <script>
+    // ২. Firebase Config সেটআপ (আপনার দেওয়া SDK থেকে)
+    const firebaseConfig = {
+      apiKey: "AIzaSyB2WdXJJNYqmos9Sl_D2wCUyMzMFujE57c",
+      authDomain: "tnm-a2840.firebaseapp.com",
+      databaseURL: "https://tnm-a2840-default-rtdb.firebaseio.com/",
+      projectId: "tnm-a2840",
+      appId: "1:396157832456:web:1e127ace39524f4ca130bd"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
     let baseFee = 0;
     let currentUser = JSON.parse(localStorage.getItem('user'));
 
@@ -345,26 +360,31 @@
         }
     }
 
+    // Signup ফাংশন Firebase এর সাথে কানেক্ট করা হয়েছে
     function signup() {
         const name = document.getElementById('reg-user-name').value;
         const phone = document.getElementById('reg-user-phone').value;
         const pass = document.getElementById('reg-user-pass').value;
         if(name && phone && pass) {
-            currentUser = { name, phone, pass, balance: 0 };
-            localStorage.setItem('user', JSON.stringify(currentUser));
-            alert("Account Created!");
-            location.reload();
+            const userObj = { name, phone, pass, balance: 0 };
+            db.ref('users/' + phone).set(userObj).then(() => {
+                localStorage.setItem('user', JSON.stringify(userObj));
+                location.reload();
+            });
         } else { alert("Fill all fields"); }
     }
 
+    // Login ফাংশন Firebase থেকে ডাটা চেক করবে
     function login() {
         const phone = document.getElementById('login-phone').value;
         const pass = document.getElementById('login-pass').value;
-        if(currentUser && currentUser.phone === phone && currentUser.pass === pass) {
-            document.getElementById('auth-page').style.display = 'none';
-            document.getElementById('main-app').style.display = 'block';
-            updateProfileUI();
-        } else { alert("Wrong Phone or Password!"); }
+        db.ref('users/' + phone).once('value', (snapshot) => {
+            const user = snapshot.val();
+            if(user && user.pass === pass) {
+                localStorage.setItem('user', JSON.stringify(user));
+                location.reload();
+            } else { alert("Wrong Phone or Password!"); }
+        });
     }
 
     function logout() {
@@ -375,7 +395,10 @@
     function updateProfileUI() {
         document.getElementById('prof-name').innerText = currentUser.name;
         document.getElementById('prof-phone').innerText = currentUser.phone;
-        document.getElementById('prof-balance').innerText = currentUser.balance;
+        // Real-time ব্যালেন্স আপডেট
+        db.ref('users/' + currentUser.phone + '/balance').on('value', (snapshot) => {
+            document.getElementById('prof-balance').innerText = snapshot.val() || 0;
+        });
     }
 
     function showSection(id) {
@@ -397,7 +420,7 @@
 
     function openRegister(title, fee, option) {
         showSection('register-page');
-        document.getElementById('reg-title').innerText = "Register: " + title;
+        document.getElementById('reg-title').innerText = title;
         baseFee = fee;
         const modeSelect = document.getElementById('reg-mode');
         document.getElementById('opt-duo').style.display = (option === 'solo') ? 'none' : 'block';
@@ -409,32 +432,49 @@
     function updateRegFee() {
         const mode = document.getElementById('reg-mode').value;
         const inputArea = document.getElementById('dynamic-inputs');
-        inputArea.innerHTML = ""; // Clear existing
+        inputArea.innerHTML = ""; 
 
-        let finalFee = baseFee;
         let playerCount = 1;
+        if(mode === 'duo') playerCount = 2;
+        else if(mode === 'squad') playerCount = 4;
 
-        if(mode === 'duo') {
-            finalFee = baseFee * 2;
-            playerCount = 2;
-        } else if(mode === 'squad') {
-            finalFee = baseFee * 4;
-            playerCount = 4;
-        }
+        document.getElementById('fee-display').innerText = baseFee * playerCount;
 
-        document.getElementById('fee-display').innerText = finalFee;
-
-        // Create inputs based on player count
         for(let i = 1; i <= playerCount; i++) {
-            let label = playerCount > 1 ? `Player ${i}:` : "";
             inputArea.innerHTML += `
                 <div style="margin-top:10px; border-bottom:1px solid #444; padding-bottom:10px;">
-                    <p style="margin:5px 0; color:var(--primary); font-size:12px;">${label}</p>
+                    <p style="margin:5px 0; color:var(--primary); font-size:12px;">Player ${i}</p>
                     <input type="text" placeholder="Player ${i} Name" id="p${i}-name">
                     <input type="text" placeholder="Player ${i} In-Game UID" id="p${i}-uid">
                 </div>
             `;
         }
+    }
+
+    // নতুন রেজিস্ট্রেশন সাবমিট ফাংশন
+    function submitRegistration() {
+        const mode = document.getElementById('reg-mode').value;
+        const matchName = document.getElementById('reg-title').innerText;
+        let playerCount = (mode === 'solo') ? 1 : (mode === 'duo' ? 2 : 4);
+        let players = [];
+
+        for(let i = 1; i <= playerCount; i++) {
+            players.push({
+                name: document.getElementById(`p${i}-name`).value,
+                uid: document.getElementById(`p${i}-uid`).value
+            });
+        }
+
+        db.ref('registrations').push({
+            match: matchName,
+            mode: mode,
+            players: players,
+            userPhone: currentUser.phone,
+            time: new Date().toLocaleString()
+        }).then(() => {
+            alert("Registration Successful!");
+            showSection('home');
+        });
     }
 </script>
 
