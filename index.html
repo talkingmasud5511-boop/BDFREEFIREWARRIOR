@@ -142,7 +142,6 @@
             font-size: 13px;
         }
 
-        /* Profile & Auth Extra Style */
         .profile-card {
             background: var(--card-bg);
             padding: 20px;
@@ -265,8 +264,10 @@
 
         <p>Fee to Pay: <span id="fee-display">0</span> Taka</p>
         
-        <input type="text" placeholder="Your Name" id="reg-name">
-        <input type="text" placeholder="In-Game UID" id="reg-uid">
+        <div id="dynamic-inputs">
+            <input type="text" placeholder="Your Name" id="reg-name">
+            <input type="text" placeholder="In-Game UID" id="reg-uid">
+        </div>
 
         <button class="btn" onclick="alert('Registration Successful!')">Confirm Register</button>
         
@@ -324,7 +325,6 @@
     let baseFee = 0;
     let currentUser = JSON.parse(localStorage.getItem('user'));
 
-    // Check sssion
     window.onload = function() {
         if(currentUser) {
             document.getElementById('auth-page').style.display = 'none';
@@ -382,7 +382,6 @@
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        // Highlighting nav
         const items = document.querySelectorAll('.nav-item');
         if(id === 'home') items[0].classList.add('active');
         if(id === 'leaderboard') items[1].classList.add('active');
@@ -409,10 +408,33 @@
 
     function updateRegFee() {
         const mode = document.getElementById('reg-mode').value;
+        const inputArea = document.getElementById('dynamic-inputs');
+        inputArea.innerHTML = ""; // Clear existing
+
         let finalFee = baseFee;
-        if(mode === 'duo') finalFee = baseFee * 2;
-        if(mode === 'squad') finalFee = baseFee * 4;
+        let playerCount = 1;
+
+        if(mode === 'duo') {
+            finalFee = baseFee * 2;
+            playerCount = 2;
+        } else if(mode === 'squad') {
+            finalFee = baseFee * 4;
+            playerCount = 4;
+        }
+
         document.getElementById('fee-display').innerText = finalFee;
+
+        // Create inputs based on player count
+        for(let i = 1; i <= playerCount; i++) {
+            let label = playerCount > 1 ? `Player ${i}:` : "";
+            inputArea.innerHTML += `
+                <div style="margin-top:10px; border-bottom:1px solid #444; padding-bottom:10px;">
+                    <p style="margin:5px 0; color:var(--primary); font-size:12px;">${label}</p>
+                    <input type="text" placeholder="Player ${i} Name" id="p${i}-name">
+                    <input type="text" placeholder="Player ${i} In-Game UID" id="p${i}-uid">
+                </div>
+            `;
+        }
     }
 </script>
 
