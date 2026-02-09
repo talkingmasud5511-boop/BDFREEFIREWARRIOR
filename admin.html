@@ -148,6 +148,68 @@
                 document.getElementById('withdraw-list').innerHTML = h || 'No Withdraws';
             });
         }
-    </script>
+       <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+        <script>
+    // ১. আপনার সঠিক কনফিগ (সিঙ্গাপুর সার্ভার সহ)
+    const firebaseConfig = {
+        apiKey: "AIzaSyB2WdXJJNYqmos9Sl_D2wCUyMzMFujE57c",
+        authDomain: "tnm-a2840.firebaseapp.com",
+        databaseURL: "https://tnm-a2840-default-rtdb.asia-southeast1.firebasedatabase.app/",
+        projectId: "tnm-a2840",
+        storageBucket: "tnm-a2840.appspot.com",
+        messagingSenderId: "396157832456",
+        appId: "1:396157832456:web:1e127ace39524f4ca130bd"
+    };
+
+    // Firebase শুরু করা
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
+
+    // ২. ব্যালেন্স আপডেট ফাংশন
+    function updateBalance() {
+        const phone = document.getElementById('target-phone').value.trim();
+        const amt = parseInt(document.getElementById('balance-amount').value);
+        
+        if(phone && !isNaN(amt)) {
+            db.ref('users/' + phone + '/balance').transaction(current => {
+                return (current || 0) + amt;
+            }).then(() => {
+                alert('টাকা সফলভাবে আপডেট হয়েছে!');
+            }).catch(e => alert("ভুল হয়েছে: " + e.message));
+        } else {
+            alert("নম্বর ও টাকার পরিমাণ ঠিকঠাক লিখুন");
+        }
+    }
+
+    // ৩. রুম আইডি পাঠানো
+    function sendRoom() {
+        const match = document.getElementById('match-name').value;
+        const info = document.getElementById('room-info').value;
+        if(info) {
+            db.ref('room_details/' + match).set({ 
+                msg: info, 
+                time: new Date().toLocaleString() 
+            }).then(() => alert('রুম আইডি পাঠানো হয়েছে!'));
+        }
+    }
+
+    // ৪. রেজিস্ট্রেশন লিস্ট লোড করা
+    db.ref('registrations').on('value', s => {
+        let h = ''; 
+        s.forEach(c => { 
+            const d = c.val();
+            h += `<div class="box">
+                <p>🏆 <b>${d.match}</b></p>
+                <p>📱 User: ${d.userPhone}</p>
+                <button class="btn-del" onclick="db.ref('registrations/${c.key}').remove()">মুছে ফেলুন</button>
+            </div>`;
+        });
+        document.getElementById('reg-list').innerHTML = h || 'কোনো রেজিস্ট্রেশন নেই';
+    });
+</script>
 </body>
 </html>
