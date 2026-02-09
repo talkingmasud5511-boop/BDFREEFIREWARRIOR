@@ -12,8 +12,8 @@
         .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 5px; }
         .btn-update { background: #00d2ff; color: black; }
         .btn-room { background: #ffda44; color: black; }
-        .btn-del { background: #ff4b2b; color: white; padding: 5px; font-size: 11px; margin-top: 5px; }
-        .box { background: #252525; padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px solid #444; }
+        .btn-del { background: #ff4b2b; color: white; padding: 5px; font-size: 11px; margin-top: 5px; cursor: pointer; border-radius: 4px; border:none; }
+        .box { background: #252525; padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px solid #444; position: relative; }
         #login-lock { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10000; }
     </style>
 </head>
@@ -31,27 +31,27 @@
         <div class="card" style="border-left-color: #00d2ff;">
             <h2>💰 User Wallet Control</h2>
             <input type="text" id="target-phone" placeholder="User Phone Number">
-            <input type="number" id="balance-amount" placeholder="Amount (100 to add, -50 to cut)">
+            <input type="number" id="balance-amount" placeholder="Amount (e.g. 50 or -50)">
             <button class="btn btn-update" onclick="updateBalance()">Update Balance</button>
-            <button class="btn" style="background: #38ef7d;" onclick="checkBalance()">Check Balance</button>
+            <button class="btn" style="background: #38ef7d;" onclick="checkBalance()">Check Current Balance</button>
             <p id="bal-show" style="text-align:center; color: #ffda44; margin-top: 10px;"></p>
         </div>
 
         <div class="card" style="border-left-color: #ffda44;">
             <h2>📢 Send Room ID & Pass</h2>
             <select id="match-name">
-                <option value="Solo Match">1. Solo Match</option>
-                <option value="Duo Match 20taka">2. Duo Match 20taka</option>
-                <option value="Duo Match 40taka">3. Duo Match 40taka</option>
-                <option value="CS 4vs4">4. CS 4vs4</option>
-                <option value="CS 2vs2">5. CS 2vs2</option>
-                <option value="CS 1vs1">6. CS 1vs1</option>
+                <option value="Solo Bermuda Match">Solo Bermuda Match</option>
+                <option value="Duo Match 1">Duo Match 1</option>
+                <option value="Duo Match 2">Duo Match 2</option>
+                <option value="CS 4vs4">CS 4vs4</option>
+                <option value="CS 2vs2">CS 2vs2</option>
+                <option value="CS 1vs1">CS 1vs1</option>
             </select>
             <input type="text" id="room-info" placeholder="Room ID: 1234, Pass: 555">
             <button class="btn btn-room" onclick="sendRoom()">Send Details</button>
         </div>
 
-        <h2>🛡️ Match Registrations</h2>
+        <h2>🛡️ Match Registrations (Duo/Squad support)</h2>
         <div id="reg-list">Loading...</div>
 
         <h2>📥 Deposit Requests</h2>
@@ -81,18 +81,19 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        // ১. ব্যালেন্স আপডেট পাষ্ট ঠিক করা হয়েছে (users ফোল্ডারে)
         function updateBalance() {
             const phone = document.getElementById('target-phone').value.trim();
             const amt = parseInt(document.getElementById('balance-amount').value);
             if(phone && amt) {
-                db.ref('wallets/' + phone + '/balance').transaction(c => (c || 0) + amt)
+                db.ref('users/' + phone + '/balance').transaction(c => (c || 0) + amt)
                 .then(() => { alert('Balance Updated!'); checkBalance(); });
             }
         }
 
         function checkBalance() {
             const phone = document.getElementById('target-phone').value.trim();
-            db.ref('wallets/' + phone + '/balance').once('value', s => {
+            db.ref('users/' + phone + '/balance').once('value', s => {
                 document.getElementById('bal-show').innerText = "Current Balance: ৳" + (s.val() || 0);
             });
         }
@@ -107,27 +108,42 @@
         }
 
         function loadData() {
-            // Registrations
+            // ২. ডাইনামিক প্লেয়ার লিস্ট দেখার জন্য কোড আপডেট
             db.ref('registrations').on('value', s => {
-                let h = ''; s.forEach(c => { const d = c.val();
-                    h += `<div class="box"><p>🏆 <b>${d.match}</b></p><p>👤 ${d.playerName} (${d.gameUID})</p>
-                    <button class="btn-del" onclick="db.ref('registrations/${c.key}').remove()">Remove</button></div>`;
+                let h = ''; 
+                s.forEach(c => { 
+                    const d = c.val();
+                    let playerDetails = '';
+                    // Duo/Squad এর সব প্লেয়ারের নাম বের করা
+                    if(d.players) {
+                        d.players.forEach((p, index) => {
+                            playerDetails += `<br>P${index+1}: ${p.name} (${p.uid})`;
+                        });
+                    }
+                    
+                    h += `<div class="box">
+                        <p style="color:#ffda44">🏆 <b>${d.match}</b> (${d.mode})</p>
+                        <p>📱 User Phone: ${d.userPhone}</p>
+                        <p>👥 Players: ${playerDetails}</p>
+                        <button class="btn-del" onclick="db.ref('registrations/${c.key}').remove()">Remove</button>
+                    </div>`;
                 });
                 document.getElementById('reg-list').innerHTML = h || 'No Registrations';
             });
-            // Deposits
+
+            // ৩. ডিপোজিট এবং উইথড্র পাষ্ট ঠিক করা হয়েছে
             db.ref('deposits').on('value', s => {
                 let h = ''; s.forEach(c => { const d = c.val();
                     h += `<div class="box"><p>📱 <b>${d.phone}</b></p><p>💵 ${d.amount} TK (Trx: ${d.trxID})</p>
-                    <button class="btn-del" style="background:#38ef7d;color:black" onclick="db.ref('deposits/${c.key}').remove()">Done</button></div>`;
+                    <button class="btn-del" style="background:#38ef7d;color:black" onclick="db.ref('deposits/${c.key}').remove()">Done/Delete</button></div>`;
                 });
                 document.getElementById('deposit-list').innerHTML = h || 'No Deposits';
             });
-            // Withdraws
+
             db.ref('withdraws').on('value', s => {
                 let h = ''; s.forEach(c => { const d = c.val();
                     h += `<div class="box"><p>📱 <b>${d.number}</b></p><p>💵 ${d.amount} TK</p>
-                    <button class="btn-del" onclick="db.ref('withdraws/${c.key}').remove()">Paid</button></div>`;
+                    <button class="btn-del" onclick="db.ref('withdraws/${c.key}').remove()">Paid/Delete</button></div>`;
                 });
                 document.getElementById('withdraw-list').innerHTML = h || 'No Withdraws';
             });
