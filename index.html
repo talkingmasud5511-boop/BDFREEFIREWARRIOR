@@ -476,6 +476,24 @@
             showSection('home');
         });
     }
+// Firebase Configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyB2WdXJJNYqmos9Sl_D2wCUyMzMFujE57c",
+    authDomain: "tnm-a2840.firebaseapp.com",
+    // আপনার সিঙ্গাপুর সার্ভারের সঠিক URL এটি
+    databaseURL: "https://tnm-a2840-default-rtdb.asia-southeast1.firebasedatabase.app/",
+    projectId: "tnm-a2840",
+    storageBucket: "tnm-a2840.appspot.com",
+    messagingSenderId: "396157832456",
+    appId: "1:396157832456:web:1e127ace39524f4ca130bd"
+};
+
+// Initialize Firebase
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.database();
+
 </script>
 
 </body>
