@@ -3,317 +3,418 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FF WARRIOR BD - ULTIMATE</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>TNM RIYAD TOURNAMENT</title>
     <style>
-        :root { --primary: #ff0040; --accent: #00f2ff; --bg: #050507; --card: #121217; --yellow: #ffd700; --green: #25D366; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: #fff; padding-bottom: 90px; }
-        .gaming-font { font-family: 'Rajdhani', sans-serif; text-transform: uppercase; }
+        :root {
+            --primary: #ff4b2b;
+            --secondary: #ff416c;
+            --dark: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text: #ffffff;
+        }
 
-        /* Screens */
-        .auth-screen { height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://wallpaperaccess.com/full/1155015.jpg') center/cover; }
-        .auth-box { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid var(--primary); width: 100%; max-width: 400px; text-align: center; }
-        .screen { display: none; padding: 15px; animation: fadeIn 0.3s ease; }
-        .active-screen { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark);
+            color: var(--text);
+            margin: 0;
+            padding-bottom: 70px;
+        }
 
-        /* Match Card */
-        .match-card { background: var(--card); border-radius: 20px; margin-bottom: 25px; border: 1px solid #222; overflow: hidden; position: relative; }
-        .match-header { height: 125px; background: url('https://img.redbull.com/images/c_limit,w_1500,h_1000,f_auto,q_auto/redbullcom/2020/4/17/ixtqnt6t9h7m9w0m4o2v/free-fire') center/cover; }
-        .match-tag { position: absolute; top: 10px; left: 10px; background: var(--primary); padding: 4px 12px; border-radius: 6px; font-weight: bold; font-size: 11px; }
-        
-        .prize-list { background: #08080a; padding: 10px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #1a1a1a; }
-        .prize-item { display: flex; justify-content: space-between; font-size: 11px; }
-        .reg-tabs { display: flex; gap: 5px; margin-bottom: 15px; background: #000; padding: 5px; border-radius: 10px; }
-        .reg-tab { flex: 1; padding: 8px; text-align: center; font-size: 11px; font-weight: bold; cursor: pointer; border-radius: 8px; color: #888; }
-        .reg-tab.active { background: var(--primary); color: white; }
+        .header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
 
-        .input-box { background: #000; border: 1px solid #333; padding: 12px; width: 100%; border-radius: 10px; color: white; margin-bottom: 10px; outline: none; font-size: 13px; display: none; }
-        .show-input { display: block; }
-        .btn-main { width: 100%; padding: 14px; background: var(--primary); border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .section {
+            display: none;
+            padding: 15px;
+            animation: fadeIn 0.5s;
+        }
 
-        /* Nav */
-        nav { position: fixed; bottom: 0; width: 100%; background: #0a0a0d; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #222; z-index: 1000; }
-        .nav-item { text-align: center; color: #555; font-size: 9px; cursor: pointer; flex:1; }
-        .nav-item i { font-size: 18px; display: block; margin-bottom: 4px; }
-        .nav-item.active { color: var(--primary); }
+        .section.active {
+            display: block;
+        }
 
-        .support-card { background: #1a1a20; padding: 15px; border-radius: 15px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; border-left: 5px solid var(--accent); }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .match-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--primary);
+            position: relative;
+        }
+
+        .match-title {
+            font-size: 20px;
+            color: #ffda44;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .prize-table {
+            width: 100%;
+            font-size: 14px;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        .prize-table td {
+            padding: 5px;
+            border-bottom: 1px solid #444;
+        }
+
+        .btn {
+            background: linear-gradient(to right, #11998e, #38ef7d);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .details-btn {
+            background: #555;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background: #333;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #111;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #333;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 10px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .notice {
+            background: #442222;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            border: 1px solid red;
+        }
+
+        .per-kill {
+            color: #38ef7d;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        /* Profile & Auth Extra Style */
+        .profile-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
-    <div id="scr-signin" class="auth-screen active-screen">
-        <div class="auth-box">
-            <h2 class="gaming-font" style="color:var(--primary); margin-bottom:20px;">Welcome Back 🔑</h2>
-            <input type="email" id="login-email" class="input-box show-input" placeholder="Email">
-            <input type="password" id="login-pass" class="input-box show-input" placeholder="Password">
-            <button class="btn-main" onclick="handleLogin()">Login 🔓</button>
-            <p style="margin-top:15px; font-size:12px; color:#888;">New player? <span style="color:var(--primary); cursor:pointer;" onclick="toggleAuth('signup')">Sign Up</span></p>
+<div id="auth-page" style="display: block;">
+    <div class="header">LOGIN / SIGN UP</div>
+    <div style="padding: 20px;">
+        <div id="login-box">
+            <h2>Login</h2>
+            <input type="text" id="login-phone" placeholder="Phone Number">
+            <input type="password" id="login-pass" placeholder="Password">
+            <button class="btn" onclick="login()">Sign In</button>
+            <p onclick="toggleAuth()" style="text-align:center; color: var(--secondary);">New here? Create Account</p>
+        </div>
+        <div id="signup-box" style="display: none;">
+            <h2>Create Account</h2>
+            <input type="text" id="reg-user-name" placeholder="Full Name">
+            <input type="text" id="reg-user-phone" placeholder="Phone Number">
+            <input type="password" id="reg-user-pass" placeholder="Create Password">
+            <button class="btn" onclick="signup()">Sign Up</button>
+            <p onclick="toggleAuth()" style="text-align:center; color: var(--secondary);">Already have account? Login</p>
+        </div>
+    </div>
+</div>
+
+<div id="main-app" style="display: none;">
+    <div class="header">🎮 TNM RIYAD TOURNAMENT 🎮</div>
+
+    <div id="home" class="section active">
+        <div class="match-card">
+            <div class="match-title">🔥 Solo Bermuda Match 🏆</div>
+            <p>Entry Fee: 10 Taka | <span class="per-kill">Per Kill: 5 Taka (Max 6 Kill Bonus)</span></p>
+            <button class="btn details-btn" onclick="showMatchDetails('Room ID: 12345', 'Pass: 999')">Match Details</button>
+            <table class="prize-table">
+                <tr><td>1st: 50tk</td><td>2nd: 40tk</td><td>3rd: 30tk</td></tr>
+                <tr><td>4th: 20tk</td><td>5th: 10tk</td><td>Slots: 48/48</td></tr>
+            </table>
+            <button class="btn" onclick="openRegister('Solo Bermuda', 10, 'solo')">Register Now</button>
+        </div>
+
+        <div class="match-card">
+            <div class="match-title">⚔️ Duo Match (1) 🥇</div>
+            <p>Entry Fee: 20 Taka | <span class="per-kill">Per Kill: 10 Taka (Max 6 Kill Bonus)</span></p>
+            <button class="btn details-btn" onclick="showMatchDetails('Room ID: 5678', 'Pass: 888')">Match Details</button>
+            <table class="prize-table">
+                <tr><td>1st: 100tk (50/50 Separated)</td><td>2nd: 80tk</td><td>3rd: 60tk</td></tr>
+                <tr><td>4th: 40tk</td><td>5th: 20tk</td><td>Total: 300tk</td></tr>
+            </table>
+            <button class="btn" onclick="openRegister('Duo Match 1', 20, 'duo_option')">Register Now</button>
+        </div>
+
+        <div class="match-card">
+            <div class="match-title">⚔️ Duo Match (2) 🥈</div>
+            <p>Entry Fee: 40 Taka | <span class="per-kill">Per Kill: 20 Taka (Max 6 Kill Bonus)</span></p>
+            <button class="btn details-btn" onclick="showMatchDetails('Room ID: 4321', 'Pass: 777')">Match Details</button>
+            <table class="prize-table">
+                <tr><td>1st: 200tk (100/100 Separated)</td><td>2nd: 160tk</td><td>3rd: 120tk</td></tr>
+                <tr><td>4th: 80tk</td><td>5th: 40tk</td><td>Total: 600tk</td></tr>
+            </table>
+            <button class="btn" onclick="openRegister('Duo Match 2', 40, 'duo_option')">Register Now</button>
+        </div>
+
+        <div class="match-card">
+            <div class="match-title">🛡️ Clash Squad 4vs4 🔫</div>
+            <p>Entry Fee: 50tk/Person | Win Prize: 340tk</p>
+            <p>Winner: 85 Taka Each</p>
+            <button class="btn details-btn" onclick="showMatchDetails('ID: CS1', 'Pass: 111')">Match Details</button>
+            <button class="btn" onclick="openRegister('CS 4vs4', 50, 'squad_full')">Register Now</button>
+        </div>
+
+        <div class="match-card">
+            <div class="match-title">🛡️ Clash Squad 2vs2 🔫</div>
+            <p>Entry Fee: 100tk/Person | Win Prize: 350tk</p>
+            <p>Winner: 175 Taka Each</p>
+            <button class="btn details-btn" onclick="showMatchDetails('ID: CS2', 'Pass: 222')">Match Details</button>
+            <button class="btn" onclick="openRegister('CS 2vs2', 100, 'duo_option')">Register Now</button>
+        </div>
+
+        <div class="match-card">
+            <div class="match-title">🛡️ Clash Squad 1vs1 🔫</div>
+            <p>Entry Fee: 200tk | Win Prize: 360tk</p>
+            <button class="btn details-btn" onclick="showMatchDetails('ID: CS3', 'Pass: 333')">Match Details</button>
+            <button class="btn" onclick="openRegister('CS 1vs1', 200, 'solo')">Register Now</button>
         </div>
     </div>
 
-    <div id="scr-signup" class="auth-screen" style="display:none;">
-        <div class="auth-box">
-            <h2 class="gaming-font" style="color:var(--primary); margin-bottom:20px;">Create Account 📝</h2>
-            <input type="text" id="reg-name" class="input-box show-input" placeholder="Full Name">
-            <input type="email" id="reg-email" class="input-box show-input" placeholder="Email">
-            <input type="password" id="reg-pass" class="input-box show-input" placeholder="Password">
-            <button class="btn-main" onclick="handleSignUp()">Register ✅</button>
-            <p style="margin-top:15px; font-size:12px; color:#888;">Have account? <span style="color:var(--primary); cursor:pointer;" onclick="toggleAuth('signin')">Sign In</span></p>
+    <div id="profile" class="section">
+        <h2>My Profile</h2>
+        <div class="profile-card">
+            <div style="font-size: 50px;">👤</div>
+            <h3 id="prof-name">User Name</h3>
+            <p id="prof-phone">01xxxxxxxxx</p>
+            <div style="background: #444; padding: 10px; border-radius: 8px;">
+                <span>Balance: </span><span id="prof-balance" style="color:#38ef7d; font-weight:bold;">0</span><span> Taka</span>
+            </div>
+            <button class="btn" onclick="logout()" style="background: #ff4b2b; margin-top: 20px;">Logout</button>
         </div>
     </div>
 
-    <div id="main-app" style="display:none;">
-        <div style="padding:15px; display:flex; justify-content:space-between; align-items:center; background:var(--card); border-bottom:1px solid #222;">
-            <h2 class="gaming-font" style="color:var(--primary);">⚔️ WARRIOR BD</h2>
-            <div id="user-balance-top" style="background:#000; padding:6px 12px; border-radius:20px; color:var(--accent); font-weight:bold; border:1px solid var(--accent);">৳ 0.00</div>
+    <div id="register-page" class="section">
+        <button class="btn details-btn" onclick="showSection('home')">⬅ Back</button>
+        <h2 id="reg-title">Registration</h2>
+        <div class="notice">
+            ⚠️ কাস্টম এ অবৈধ কোনো আইটেম ব্যবহার করা নিষেধ। বিস্তারিত জানতে ইউটিউব চ্যানেল ভিজিট করুন। <br>
+            <a href="https://youtube.com/@tnmriyad?si=MomGy8I0esH6Cgs1l" style="color: yellow;">Join YouTube</a>
         </div>
+        
+        <label>Select Mode:</label>
+        <select id="reg-mode" onchange="updateRegFee()">
+            <option value="solo">Solo Join</option>
+            <option value="duo" id="opt-duo">Duo (Team)</option>
+            <option value="squad" id="opt-squad">Squad (4 Members)</option>
+        </select>
 
-        <div id="scr-home" class="screen active-screen">
-            <div class="match-card">
-                <div class="match-tag">SOLO • 10 TK</div>
-                <div class="match-header"></div>
-                <div class="match-body" style="padding:15px;">
-                    <h3 class="gaming-font">Solo Survival #01 🏆</h3>
-                    <div class="prize-list"><div class="prize-item"><span>1st: ৳ 50 | 2nd: ৳ 40 | 3rd: ৳ 30</span></div></div>
-                    <input type="text" class="input-box show-input uid" placeholder="Player UID">
-                    <input type="text" class="input-box show-input ign" placeholder="ID Name (In-Game)">
-                    <button class="btn-main" onclick="joinMatch('Solo #01', 10, this)">Join Now</button>
-                </div>
-            </div>
+        <p>Fee to Pay: <span id="fee-display">0</span> Taka</p>
+        
+        <input type="text" placeholder="Your Name" id="reg-name">
+        <input type="text" placeholder="In-Game UID" id="reg-uid">
 
-            <div class="match-card" id="m-duo1">
-                <div class="match-tag">DUO • 20 TK</div>
-                <div class="match-header" style="filter:hue-rotate(50deg)"></div>
-                <div class="match-body" style="padding:15px;">
-                    <h3 class="gaming-font">Duo Battle #D1 ⚔️</h3>
-                    <input type="text" class="input-box show-input uid" placeholder="P1 UID">
-                    <input type="text" class="input-box show-input ign" placeholder="P1 ID Name">
-                    <input type="text" class="input-box show-input uid" placeholder="P2 UID">
-                    <input type="text" class="input-box show-input ign" placeholder="P2 ID Name">
-                    <button class="btn-main" onclick="joinMatch('Duo #D1', 20, this)">Join Duo</button>
-                </div>
-            </div>
-
-            <div class="match-card" id="m-2v2">
-                <div class="match-tag">2vs2 • 100 TK</div>
-                <div class="match-header" style="filter:hue-rotate(280deg)"></div>
-                <div class="match-body" style="padding:15px;">
-                    <h3 class="gaming-font">2vs2 Clash #2V2 🤝</h3>
-                    <input type="text" class="input-box show-input uid" placeholder="P1 UID">
-                    <input type="text" class="input-box show-input ign" placeholder="P1 ID Name">
-                    <input type="text" class="input-box show-input uid" placeholder="P2 UID">
-                    <input type="text" class="input-box show-input ign" placeholder="P2 ID Name">
-                    <button class="btn-main" onclick="joinMatch('2vs2 #Battle', 100, this)">Join 2vs2</button>
-                </div>
-            </div>
-
-            <div class="match-card" id="m-4v4">
-                <div class="match-tag">SQUAD • 200 TK</div>
-                <div class="match-header" style="filter:hue-rotate(150deg)"></div>
-                <div class="match-body" style="padding:15px;">
-                    <h3 class="gaming-font">Squad Battle #CS ⚡</h3>
-                    <input type="text" class="input-box show-input uid" placeholder="Leader UID">
-                    <input type="text" class="input-box show-input ign" placeholder="Leader ID Name">
-                    <button class="btn-main" onclick="joinMatch('Squad #CS', 200, this)">Join Squad</button>
-                </div>
-            </div>
+        <button class="btn" onclick="alert('Registration Successful!')">Confirm Register</button>
+        
+        <div id="status-box" style="margin-top:20px; border:1px dashed #777; padding:10px;">
+            <p>Status: <span id="reg-status">Waiting for data...</span></p>
         </div>
-
-        <div id="scr-deposit" class="screen">
-            <h2 class="gaming-font">Add Money 💰</h2>
-            <div class="match-card" style="padding:20px; border:1px dashed var(--green);">
-                <p style="font-size:12px;">Send Money (Bkash/Nagad):</p>
-                <h3 style="color:var(--accent); margin:10px 0;">01910658737</h3>
-                <select id="dep-method" class="input-box show-input" style="display:block; background:#000; color:white;">
-                    <option>Bkash</option><option>Nagad</option>
-                </select>
-                <input type="number" id="dep-amount" class="input-box show-input" placeholder="Amount">
-                <input type="text" id="dep-number" class="input-box show-input" placeholder="Your Number">
-                <input type="text" id="dep-trx" class="input-box show-input" placeholder="TrxID">
-                <button class="btn-main" style="background:var(--green)" onclick="handleDeposit()">Submit Deposit</button>
-            </div>
-        </div>
-
-        <div id="scr-withdraw" class="screen">
-            <h2 class="gaming-font">Withdraw Cash 💸</h2>
-            <div class="match-card" style="padding:20px;">
-                <select id="wit-method" class="input-box show-input" style="display:block; background:#000; color:white;">
-                    <option>Bkash</option><option>Nagad</option><option>Rocket</option>
-                </select>
-                <input type="number" id="wit-amount" class="input-box show-input" placeholder="Amount (Min 50)">
-                <input type="text" id="wit-number" class="input-box show-input" placeholder="Receiver Number">
-                <button class="btn-main" onclick="handleWithdraw()">Request Withdraw</button>
-            </div>
-        </div>
-
-        <div id="scr-status" class="screen">
-            <div style="background:var(--card); border-radius:20px; padding:25px; border:1px solid #333; text-align:center;">
-                <img src="https://cdn-icons-png.flaticon.com/512/8002/8002111.png" style="width:70px; margin-bottom:10px;">
-                <h2 id="prof-name" class="gaming-font">Player Name</h2>
-                <p id="prof-email" style="font-size:12px; color:#888;"></p>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:20px;">
-                    <div style="background:#000; padding:15px; border-radius:15px; border:1px solid #222;">
-                        <h3 id="prof-balance">৳ 0.00</h3><p style="font-size:10px;">Balance</p>
-                    </div>
-                    <div style="background:#000; padding:15px; border-radius:15px; border:1px solid #222;">
-                        <h3>0</h3><p style="font-size:10px;">Wins</p>
-                    </div>
-                </div>
-                <button class="btn-main" style="margin-top:20px; background:#333;" onclick="location.reload()">Logout</button>
-            </div>
-        </div>
-
-        <div id="scr-rank" class="screen">
-            <h2 class="gaming-font">Top Warriors 🏆</h2>
-            <div class="match-card" style="padding:15px;">
-                <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #222;"><span>1. Warrior_BD</span> <b style="color:var(--yellow);">৳ 2500</b></div>
-            </div>
-        </div>
-
-        <div id="scr-support" class="screen">
-            <h2 class="gaming-font">Support 🎧</h2>
-            <div class="support-card" onclick="window.location.href='https://wa.me/8801910658737'"><i class="fab fa-whatsapp" style="color:var(--green); font-size:30px;"></i><div><h4>WhatsApp</h4><p style="font-size:11px;">Chat with us</p></div></div>
-            <div class="support-card" onclick="window.location.href='https://youtube.com/@tnmriyad'"><i class="fab fa-youtube" style="color:red; font-size:30px;"></i><div><h4>YouTube</h4><p style="font-size:11px;">Watch Tutorials</p></div></div>
-            <div class="support-card" onclick="window.location.href='https://t.me/your_link'"><i class="fab fa-telegram" style="color:var(--accent); font-size:30px;"></i><div><h4>Telegram</h4><p style="font-size:11px;">Match Updates</p></div></div>
-        </div>
-
-        <nav>
-            <div class="nav-item active" onclick="showTab('home', this)"><i class="fas fa-gamepad"></i>Play</div>
-            <div class="nav-item" onclick="showTab('rank', this)"><i class="fas fa-trophy"></i>Rank</div>
-            <div class="nav-item" onclick="showTab('status', this)"><i class="fas fa-user-circle"></i>Profile</div>
-            <div class="nav-item" onclick="showTab('deposit', this)"><i class="fas fa-wallet"></i>Deposit</div>
-            <div class="nav-item" onclick="showTab('withdraw', this)"><i class="fas fa-money-bill"></i>Withdraw</div>
-            <div class="nav-item" onclick="showTab('support', this)"><i class="fas fa-headset"></i>Help</div>
-        </nav>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <div id="leaderboard" class="section">
+        <h2>🏆 Top Players</h2>
+        <table class="prize-table">
+            <tr style="background:#444"><td>Rank</td><td>Name</td><td>Winnings</td></tr>
+            <tr><td>#1</td><td>Masud</td><td>1500tk</td></tr>
+            <tr><td>#2</td><td>Riyad</td><td>1200tk</td></tr>
+        </table>
+    </div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyB2WdXJJNYqmos9Sl_D2wCUyMzMFujE57c",
-            authDomain: "tnm-a2840.firebaseapp.com",
-            projectId: "tnm-a2840",
-            storageBucket: "tnm-a2840.firebasestorage.app",
-            messagingSenderId: "396157832456",
-            appId: "1:396157832456:web:1e127ace39524f4ca130bd",
-            measurementId: "G-96L750V79E"
-        };
+    <div id="deposit" class="section">
+        <h2>💰 Deposit Money</h2>
+        <p>Personal Bkash/Nagad: <b>01910658737</b></p>
+        <p>Limit: 50 - 3000 Taka</p>
+        <input type="number" id="dep-amount" placeholder="Amount (50-3000)">
+        <input type="text" id="dep-phone" placeholder="Your Phone Number">
+        <input type="text" id="dep-trx" placeholder="Transaction ID">
+        <button class="btn" onclick="alert('Successful!')">Done</button>
+    </div>
 
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
+    <div id="withdraw" class="section">
+        <h2>💸 Withdraw Money</h2>
+        <p>Limit: 50 - 2000 Taka</p>
+        <input type="text" id="wit-phone" placeholder="Receiver Number">
+        <input type="number" id="wit-amount" placeholder="Amount (50-2000)">
+        <button class="btn" onclick="alert('Successful!')">Done</button>
+    </div>
 
-        let currentUser = null;
+    <div id="support" class="section">
+        <h2>📞 Support & Contact</h2>
+        <p>📧 Email: talkingmasud5511@gmail.com</p>
+        <p>💬 WhatsApp: 01910658737</p>
+        <p>📺 <a href="https://youtube.com/@tnmriyad?si=MomGy8I0esH6Cgs1" style="color:white">YouTube Channel</a></p>
+        <p>✈️ <a href="https://t.me/+XF_oEofeAeEwMDI9" style="color:white">Telegram Channel</a></p>
+    </div>
 
-        // Auth Logic
-        function toggleAuth(id) {
-            document.getElementById('scr-signin').style.display = 'none';
-            document.getElementById('scr-signup').style.display = 'none';
-            document.getElementById('scr-' + id).style.display = 'flex';
-        }
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="showSection('home')">🏠<br>Home</div>
+        <div class="nav-item" onclick="showSection('leaderboard')">🏆<br>Rank</div>
+        <div class="nav-item" onclick="showSection('deposit')">💰<br>Deposit</div>
+        <div class="nav-item" onclick="showSection('withdraw')">💸<br>Withdraw</div>
+        <div class="nav-item" onclick="showSection('profile')">👤<br>Profile</div>
+        <div class="nav-item" onclick="showSection('support')">📞<br>Support</div>
+    </nav>
+</div>
 
-        function handleSignUp() {
-            const email = document.getElementById('reg-email').value;
-            const pass = document.getElementById('reg-pass').value;
-            const name = document.getElementById('reg-name').value;
-            auth.createUserWithEmailAndPassword(email, pass).then(res => {
-                db.ref('users/' + res.user.uid).set({ name: name, email: email, balance: 0 });
-                alert("Account Created!");
-                enterApp(res.user);
-            }).catch(err => alert(err.message));
-        }
+<script>
+    let baseFee = 0;
+    let currentUser = JSON.parse(localStorage.getItem('user'));
 
-        function handleLogin() {
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-pass').value;
-            auth.signInWithEmailAndPassword(email, pass).then(res => {
-                enterApp(res.user);
-            }).catch(err => alert(err.message));
-        }
-
-        function enterApp(user) {
-            currentUser = user;
-            document.getElementById('scr-signin').style.display = 'none';
-            document.getElementById('scr-signup').style.display = 'none';
+    // Check sssion
+    window.onload = function() {
+        if(currentUser) {
+            document.getElementById('auth-page').style.display = 'none';
             document.getElementById('main-app').style.display = 'block';
-            
-            // Listen to Balance
-            db.ref('users/' + user.uid).on('value', snap => {
-                const data = snap.val();
-                document.getElementById('user-balance-top').innerText = "৳ " + data.balance.toFixed(2);
-                document.getElementById('prof-balance').innerText = "৳ " + data.balance.toFixed(2);
-                document.getElementById('prof-name').innerText = data.name;
-                document.getElementById('prof-email').innerText = data.email;
-            });
+            updateProfileUI();
         }
+    }
 
-        // Action Logic (Match Join with UID & Name)
-        function joinMatch(matchName, fee, btn) {
-            const parent = btn.parentElement;
-            const uids = Array.from(parent.querySelectorAll('.uid')).map(i => i.value);
-            const names = Array.from(parent.querySelectorAll('.ign')).map(i => i.value);
-
-            if(uids.some(u => u === "") || names.some(n => n === "")) return alert("Fill all UID and ID Names!");
-
-            db.ref('users/' + currentUser.uid + '/balance').once('value').then(snap => {
-                const bal = snap.val();
-                if(bal < fee) return alert("Insufficient Balance!");
-                
-                // Deduct balance & Save Match
-                db.ref('users/' + currentUser.uid).update({ balance: bal - fee });
-                db.ref('match_joins').push({
-                    user: currentUser.email,
-                    match: matchName,
-                    players: uids.map((u, i) => ({ uid: u, name: names[i] })),
-                    time: Date.now()
-                });
-                alert("Joined Successfully!");
-            });
+    function toggleAuth() {
+        const lBox = document.getElementById('login-box');
+        const sBox = document.getElementById('signup-box');
+        if(lBox.style.display === 'none') {
+            lBox.style.display = 'block';
+            sBox.style.display = 'none';
+        } else {
+            lBox.style.display = 'none';
+            sBox.style.display = 'block';
         }
+    }
 
-        function handleDeposit() {
-            const amount = document.getElementById('dep-amount').value;
-            const num = document.getElementById('dep-number').value;
-            const trx = document.getElementById('dep-trx').value;
-            const method = document.getElementById('dep-method').value;
-            if(!amount || !num || !trx) return alert("Fill all fields!");
+    function signup() {
+        const name = document.getElementById('reg-user-name').value;
+        const phone = document.getElementById('reg-user-phone').value;
+        const pass = document.getElementById('reg-user-pass').value;
+        if(name && phone && pass) {
+            currentUser = { name, phone, pass, balance: 0 };
+            localStorage.setItem('user', JSON.stringify(currentUser));
+            alert("Account Created!");
+            location.reload();
+        } else { alert("Fill all fields"); }
+    }
 
-            db.ref('deposits').push({
-                email: currentUser.email,
-                amount: amount,
-                number: num,
-                trx: trx,
-                method: method,
-                status: 'pending'
-            }).then(() => alert("Request Sent! Wait for approval."));
-        }
+    function login() {
+        const phone = document.getElementById('login-phone').value;
+        const pass = document.getElementById('login-pass').value;
+        if(currentUser && currentUser.phone === phone && currentUser.pass === pass) {
+            document.getElementById('auth-page').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+            updateProfileUI();
+        } else { alert("Wrong Phone or Password!"); }
+    }
 
-        function handleWithdraw() {
-            const amount = document.getElementById('wit-amount').value;
-            const num = document.getElementById('wit-number').value;
-            const method = document.getElementById('wit-method').value;
-            if(amount < 50) return alert("Min withdraw 50!");
+    function logout() {
+        localStorage.removeItem('user');
+        location.reload();
+    }
 
-            db.ref('users/' + currentUser.uid + '/balance').once('value').then(snap => {
-                if(snap.val() < amount) return alert("Low balance!");
-                db.ref('withdraws').push({ email: currentUser.email, amount: amount, number: num, method: method, status: 'pending' });
-                alert("Withdraw Request Sent!");
-            });
-        }
+    function updateProfileUI() {
+        document.getElementById('prof-name').innerText = currentUser.name;
+        document.getElementById('prof-phone').innerText = currentUser.phone;
+        document.getElementById('prof-balance').innerText = currentUser.balance;
+    }
 
-        function showTab(id, el) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById('scr-' + id).classList.add('active-screen');
-            el.classList.add('active');
-        }
-    </script>
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        // Highlighting nav
+        const items = document.querySelectorAll('.nav-item');
+        if(id === 'home') items[0].classList.add('active');
+        if(id === 'leaderboard') items[1].classList.add('active');
+        if(id === 'deposit') items[2].classList.add('active');
+        if(id === 'withdraw') items[3].classList.add('active');
+        if(id === 'profile') items[4].classList.add('active');
+        if(id === 'support') items[5].classList.add('active');
+    }
+
+    function showMatchDetails(id, pass) {
+        alert("Match Details:\n" + id + "\n" + pass);
+    }
+
+    function openRegister(title, fee, option) {
+        showSection('register-page');
+        document.getElementById('reg-title').innerText = "Register: " + title;
+        baseFee = fee;
+        const modeSelect = document.getElementById('reg-mode');
+        document.getElementById('opt-duo').style.display = (option === 'solo') ? 'none' : 'block';
+        document.getElementById('opt-squad').style.display = (option === 'squad_full') ? 'block' : 'none';
+        modeSelect.value = 'solo';
+        updateRegFee();
+    }
+
+    function updateRegFee() {
+        const mode = document.getElementById('reg-mode').value;
+        let finalFee = baseFee;
+        if(mode === 'duo') finalFee = baseFee * 2;
+        if(mode === 'squad') finalFee = baseFee * 4;
+        document.getElementById('fee-display').innerText = finalFee;
+    }
+</script>
+
 </body>
-    </html>
+</html>
